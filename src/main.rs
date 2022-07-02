@@ -14,6 +14,10 @@ use windows::Win32::System::Console::CONSOLE_SCREEN_BUFFER_INFO;
 use windows::Win32::System::Console::COORD;
 use windows::Win32::System::Console::SMALL_RECT;
 use windows::Win32::System::Console::STD_OUTPUT_HANDLE;
+use windows::Win32::UI::WindowsAndMessaging::ShowWindow;
+use windows::Win32::System::Console::GetConsoleWindow;
+use windows::Win32::UI::WindowsAndMessaging::SW_MAXIMIZE;
+use windows::Win32::Foundation::HWND;
 
 // список цветов консоли
 const BLACK: u16 = 0; // Черный
@@ -154,6 +158,13 @@ fn set_text_color(color: u16) {
     }
 }
 
+fn open_console_full_screen() {
+    unsafe {
+        let console_window: HWND = GetConsoleWindow();
+        ShowWindow(console_window, SW_MAXIMIZE);
+    }
+}
+
 fn clear_console() {
     unsafe {
         let console_handle = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -201,6 +212,7 @@ fn spawn_food(food_position_x: &mut i32, food_position_y: &mut i32) {
 }
 
 fn main() {
+    open_console_full_screen();
     hide_cursor();
     let mut graphics = "".to_string();
 
@@ -292,11 +304,6 @@ fn main() {
                 }
 
                 match direction.direction {
-                    /*
-                        snake.push(snake[0]); // push добавляет элемент в конец вектора
-                        snake.remove(0); // remove удаляет элемент из вектора
-                        snake.insert(0, 0); // позволяет добавить элемент в любую часть вектора
-                    */
                     Directions::Up => {
                         snake[snake_len].position_x = snake[0].position_x;
                         snake[snake_len].position_y = snake[0].position_y - 1;
