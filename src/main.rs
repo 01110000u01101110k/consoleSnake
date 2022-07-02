@@ -230,7 +230,7 @@ fn main() {
         snake_len = &snake.len() - 1;
         //let now = std::time::Instant::now(); // начало замера времени. Для замера производительности
         unsafe {
-            if windows::Win32::UI::Input::KeyboardAndMouse::GetAsyncKeyState(87)
+            if windows::Win32::UI::Input::KeyboardAndMouse::GetAsyncKeyState(87) | windows::Win32::UI::Input::KeyboardAndMouse::GetAsyncKeyState(38)
                 == (1 | -32767 | -32768)
             {
                 match direction.direction {
@@ -239,7 +239,7 @@ fn main() {
                     }
                     _ => (),
                 }
-            } else if windows::Win32::UI::Input::KeyboardAndMouse::GetAsyncKeyState(83)
+            } else if windows::Win32::UI::Input::KeyboardAndMouse::GetAsyncKeyState(83) | windows::Win32::UI::Input::KeyboardAndMouse::GetAsyncKeyState(40)
                 == (1 | -32767 | -32768)
             {
                 match direction.direction {
@@ -248,7 +248,7 @@ fn main() {
                     }
                     _ => (),
                 }
-            } else if windows::Win32::UI::Input::KeyboardAndMouse::GetAsyncKeyState(65)
+            } else if windows::Win32::UI::Input::KeyboardAndMouse::GetAsyncKeyState(65) | windows::Win32::UI::Input::KeyboardAndMouse::GetAsyncKeyState(37)
                 == (1 | -32767 | -32768)
             {
                 match direction.direction {
@@ -257,7 +257,7 @@ fn main() {
                     }
                     _ => (),
                 }
-            } else if windows::Win32::UI::Input::KeyboardAndMouse::GetAsyncKeyState(68)
+            } else if windows::Win32::UI::Input::KeyboardAndMouse::GetAsyncKeyState(68) | windows::Win32::UI::Input::KeyboardAndMouse::GetAsyncKeyState(39)
                 == (1 | -32767 | -32768)
             {
                 match direction.direction {
@@ -274,7 +274,7 @@ fn main() {
                 update_render = true;
                 snake = vec![];
                 spawn_snake(&mut snake);
-            } else if windows::Win32::UI::Input::KeyboardAndMouse::GetAsyncKeyState(32)
+            } else if windows::Win32::UI::Input::KeyboardAndMouse::GetAsyncKeyState(32) | windows::Win32::UI::Input::KeyboardAndMouse::GetAsyncKeyState(27)
                 == (1 | -32767 | -32768)
                 && !is_game_over
             {
@@ -417,6 +417,7 @@ fn main() {
 
                     render_step += 1;
                 }
+                println!("Control the snake w | a | s | d or the arrows. Pause spacebar or esc.");
             } else {
                 clear_console();
 
