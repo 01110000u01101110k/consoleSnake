@@ -1,0 +1,19 @@
+[package]
+name = "consoleGameEngine"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies.windows]
+version = "0.32.0"
+features = [
+    "Win32_UI_Input_KeyboardAndMouse",
+    "Win32_System_Console",
+    "Win32_Foundation",
+    "UI",
+    "Win32_UI_WindowsAndMessaging"
+]
+
+[dependencies]
+rand = "0.8.4"
