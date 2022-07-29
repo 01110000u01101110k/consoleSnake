@@ -1,6 +1,6 @@
 use rand::{thread_rng, Rng};
 use std::io::{self, Write};
-use std::time::Duration;
+use std::time::{Duration};
 use windows::Win32::Foundation::BOOL;
 use windows::Win32::System::Console::GetConsoleScreenBufferInfo;
 use windows::Win32::System::Console::GetStdHandle;
@@ -18,6 +18,8 @@ use windows::Win32::UI::WindowsAndMessaging::ShowWindow;
 use windows::Win32::System::Console::GetConsoleWindow;
 use windows::Win32::UI::WindowsAndMessaging::SW_MAXIMIZE;
 use windows::Win32::Foundation::HWND;
+use windows::Win32::System::Console::SetCurrentConsoleFontEx;
+use windows::Win32::System::Console::CONSOLE_FONT_INFOEX;
 
 // список цветов консоли
 const BLACK: u16 = 0; // Черный
@@ -158,6 +160,26 @@ fn set_text_color(color: u16) {
     }
 }
 
+fn set_console_font_size(font_size: i16) {
+    unsafe {
+        let console_handle = GetStdHandle(STD_OUTPUT_HANDLE);
+
+        let mut font = CONSOLE_FONT_INFOEX::default();
+        //let current_console_font_size = GetConsoleFontSize();
+
+        font.dwFontSize = COORD {
+            X: font_size,
+            Y: font_size,
+        };
+        
+        SetCurrentConsoleFontEx(
+            console_handle,
+            BOOL(0),
+            &font
+        );
+    }
+}
+
 fn open_console_full_screen() {
     unsafe {
         let console_window: HWND = GetConsoleWindow();
@@ -213,6 +235,7 @@ fn spawn_food(food_position_x: &mut i32, food_position_y: &mut i32) {
 
 fn main() {
     open_console_full_screen();
+    set_console_font_size(50);
     hide_cursor();
     let mut graphics = "".to_string();
 
@@ -408,7 +431,12 @@ fn main() {
                 clear_console();
 
                 set_text_color(LIGHT_BLUE);
-                println!("  Score {}", snake_len);
+
+                let stdout = io::stdout(); // get the global stdout entity
+                let mut handle = io::BufWriter::new(stdout); // optional: wrap that handle in a buffer
+
+                writeln!(handle, "  Score {}", snake_len);
+                //println!("  Score {}", snake_len);
 
                 let mut render_step = 0;
 
@@ -416,15 +444,15 @@ fn main() {
                     let slice = &graphics[0..CONSOLE_WIDTH as usize];
 
                     set_text_color(YELLOW);
-                    let stdout = io::stdout(); // get the global stdout entity
-                    let mut handle = io::BufWriter::new(stdout); // optional: wrap that handle in a buffer
-                    writeln!(handle, "{}", slice); // add `?` if you care about errors here
+                    
+                    writeln!(handle, "{}", slice);
 
                     graphics = String::from(&graphics[CONSOLE_WIDTH as usize..graphics.len()]);
 
                     render_step += 1;
                 }
-                println!("Control the snake w | a | s | d or the arrows. Pause spacebar or esc.");
+                writeln!(handle, "Control the snake w | a | s | d or the arrows. Pause spacebar or esc.");
+                //println!("Control the snake w | a | s | d or the arrows. Pause spacebar or esc.");
             } else {
                 clear_console();
 
